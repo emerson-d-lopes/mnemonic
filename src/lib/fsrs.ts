@@ -4,6 +4,7 @@ import {
   generatorParameters,
   Rating,
   type Card as FsrsCard,
+  type Grade,
 } from "ts-fsrs";
 import type { Card } from "../db";
 
@@ -56,7 +57,7 @@ export function scheduleCard(
   rating: Rating,
 ): Omit<Card, "id" | "deckId" | "front" | "back" | "createdAt"> {
   const scheduling = f.repeat(toFsrsCard(card), new Date());
-  const scheduled = scheduling[rating].card;
+  const scheduled = scheduling[rating as Grade].card;
   return {
     due: scheduled.due.getTime(),
     stability: scheduled.stability,
