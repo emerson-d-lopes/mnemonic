@@ -1,0 +1,90 @@
+@import "tailwindcss";
+@import "../tokens.css";
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-surface-raised: var(--color-surface-raised);
+  --color-border: var(--color-border);
+  --color-border-subtle: var(--color-border-subtle);
+  --color-text: var(--color-text);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-faint: var(--color-text-faint);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-error: var(--color-error);
+  --color-warning: var(--color-warning);
+  --color-success: var(--color-success);
+  --color-info: var(--color-info);
+
+  --font-mono: var(--font-family-mono);
+  --font-sans: var(--font-family-sans);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+}
+
+html {
+  overflow-y: scroll;
+}
+
+* {
+  text-transform: lowercase !important;
+}
+
+code,
+pre {
+  text-transform: none !important;
+}
+
+html,
+body {
+  @apply size-full;
+}
+
+body {
+  @apply font-sans antialiased;
+  @apply flex flex-col;
+  @apply bg-bg text-text;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  transition:
+    background var(--transition-normal),
+    color var(--transition-normal);
+}
+
+header {
+  @apply fixed top-0 left-0 right-0 z-50 py-5;
+  background: color-mix(in srgb, var(--color-bg) 90%, transparent);
+  @apply backdrop-blur-sm;
+  @apply border-b border-border-subtle;
+}
+
+main {
+  @apply flex-1 py-32;
+}
+
+footer {
+  @apply py-5 text-sm;
+  @apply text-text-secondary;
+  @apply border-t border-border-subtle;
+}
+
+h2,
+h5 {
+  @apply text-xl font-medium text-accent;
+}
+
+.animate {
+  @apply opacity-0 translate-y-3;
+  @apply transition-all duration-700 ease-out;
+}
+
+.animate.show {
+  @apply opacity-100 translate-y-0;
+}
