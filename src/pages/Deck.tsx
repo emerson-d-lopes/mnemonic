@@ -6,6 +6,7 @@ import { db } from "../db";
 import { useCards, useDeckStats } from "../hooks/useCards";
 import { newCardDefaults } from "../lib/fsrs";
 import { randomId, formatDue } from "../lib/utils";
+import { recordCard, recordDeckDeleted } from "../sync";
 
 function CardRow({
   id,
@@ -25,12 +26,14 @@ function CardRow({
     const b = editBack.trim();
     if (!f || !b) return;
     await db.cards.update(id, { front: f, back: b });
+    await recordCard(id);
     setEditing(false);
   };
 
   const handleDelete = async () => {
     if (!confirm("delete this card?")) return;
     await db.cards.delete(id);
+    await recordCard(id); // row gone -> tombstone
   };
 
   if (editing) {
@@ -110,24 +113,28 @@ export function Deck() {
     const f = front.trim();
     const b = back.trim();
     if (!f || !b || !id) return;
+    const cardId = randomId();
     await db.cards.add({
-      id: randomId(),
+      id: cardId,
       deckId: id,
       front: f,
       back: b,
       createdAt: Date.now(),
       ...newCardDefaults(),
     });
+    await recordCard(cardId);
     setFront("");
     setBack("");
   };
 
   const handleDeleteDeck = async () => {
     if (!confirm(`delete "${deck?.name}" and all its cards?`)) return;
+    const cardIds = (await db.cards.where("deckId").equals(id!).primaryKeys()) as string[];
     await db.transaction("rw", db.decks, db.cards, async () => {
       await db.cards.where("deckId").equals(id!).delete();
       await db.decks.delete(id!);
     });
+    await recordDeckDeleted(id!, cardIds);
     navigate("/");
   };
 

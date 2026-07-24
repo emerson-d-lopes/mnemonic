@@ -51,4 +51,14 @@ db.version(2).stores({
   reviewLogs: "id, deckId, cardId, date",
 });
 
+// v3: shoal sync bookkeeping (outbox, per-record HLC, cursor). Additive.
+db.version(3).stores({
+  decks: "id, createdAt",
+  cards: "id, deckId, due, state",
+  reviewLogs: "id, deckId, cardId, date",
+  _shoal_outbox: "opId, createdAt",
+  _shoal_meta: "recordId",
+  _shoal_kv: "key",
+});
+
 export { db };

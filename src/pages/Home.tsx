@@ -5,6 +5,8 @@ import { db } from "../db";
 import { useDecks, useDueCount } from "../hooks/useDecks";
 import { randomId } from "../lib/utils";
 import { seedData } from "../lib/seed";
+import { recordDeck, recordDeckDeleted } from "../sync";
+import { SyncSettings } from "../components/SyncSettings";
 
 function DeckRow({ id, name }: { id: string; name: string }) {
   const navigate = useNavigate();
@@ -13,10 +15,12 @@ function DeckRow({ id, name }: { id: string; name: string }) {
   const handleDelete = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!confirm("delete this deck and all its cards?")) return;
+    const cardIds = (await db.cards.where("deckId").equals(id).primaryKeys()) as string[];
     await db.transaction("rw", db.decks, db.cards, async () => {
       await db.cards.where("deckId").equals(id).delete();
       await db.decks.delete(id);
     });
+    await recordDeckDeleted(id, cardIds);
   };
 
   return (
@@ -62,11 +66,13 @@ export function Home() {
     e.preventDefault();
     const trimmed = name.trim();
     if (!trimmed) return;
+    const deckId = randomId();
     await db.decks.add({
-      id: randomId(),
+      id: deckId,
       name: trimmed,
       createdAt: Date.now(),
     });
+    await recordDeck(deckId);
     setName("");
   };
 
@@ -114,6 +120,8 @@ export function Home() {
       >
         load sample data
       </button>
+
+      <SyncSettings />
     </div>
   );
 }

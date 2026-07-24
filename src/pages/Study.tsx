@@ -9,6 +9,7 @@ import {
   formatInterval,
 } from "../lib/fsrs";
 import { randomId, toDateStr } from "../lib/utils";
+import { recordCard, recordReview } from "../sync";
 
 export function Study() {
   const { id } = useParams<{ id: string }>();
@@ -43,15 +44,18 @@ export function Study() {
   const handleRate = useCallback(
     async (rating: Rating) => {
       if (!card || !id) return;
-      await db.reviewLogs.add({
+      const log = {
         id: randomId(),
         cardId: card.id,
         deckId: id,
         date: toDateStr(),
         rating,
         timestamp: Date.now(),
-      });
+      };
+      await db.reviewLogs.add(log);
       await db.cards.update(card.id, scheduleCard(card, rating));
+      await recordReview(log);
+      await recordCard(card.id);
       setFlipped(false);
       setIndex((i) => i + 1);
     },
