@@ -61,6 +61,13 @@ Review logs store a local `YYYY-MM-DD` date string rather than a timestamp. The 
 reviews per calendar day as the user experienced them, so converting from UTC at render time
 would shift late-night reviews into the wrong square.
 
+## Related
+
+[habit-tracker](https://github.com/emerson-d-lopes/habit-tracker) applies the same local-first
+pattern to habit streaks. Both are styled with
+[ash-lumen](https://github.com/emerson-d-lopes/ash-lumen).
+
 ## License
 
 MIT
+
