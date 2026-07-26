@@ -19,5 +19,18 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      // `const { deleted: _d, ...row } = deck` strips a key before writing to
+      // Dexie. The binding exists to be discarded, so a rest sibling or a
+      // leading underscore both mean "intentionally unused".
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
+      ],
+    },
   },
 ]);

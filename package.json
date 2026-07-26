@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "license": "MIT OR Apache-2.0",
+  "packageManager": "pnpm@10.27.0",
   "type": "module",
   "scripts": {
     "dev": "node scripts/build-tokens.js && vite",
