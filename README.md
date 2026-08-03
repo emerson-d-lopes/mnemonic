@@ -6,6 +6,8 @@ no network dependency after first load.
 
 [Live demo](https://mnemonic.edfl.dev)
 
+![architecture](docs/architecture.png)
+
 ## Why FSRS instead of SM-2
 
 SM-2, the algorithm behind most flashcard apps, adjusts one number per card and assumes your
