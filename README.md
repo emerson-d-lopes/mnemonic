@@ -6,7 +6,12 @@ no network dependency after first load.
 
 [Live demo](https://mnemonic.edfl.dev)
 
-![architecture](docs/architecture.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/architecture-dark.svg">
+  <img alt="architecture: where does a rating go, and what reads it back?" src="docs/architecture-light.svg">
+</picture>
+
+*where does a rating go, and what reads it back?* logs store a local YYYY-MM-DD string instead of a UTC timestamp, so a late-night review lands in the right heatmap square. there is no separate new-card queue: due <= now is the whole session query.
 
 ## Why FSRS instead of SM-2
 
